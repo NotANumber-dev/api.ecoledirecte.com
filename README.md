@@ -20,21 +20,8 @@ Toutes les requêtes partagent les mêmes caractéristiques :
 - **Corps** : `data=<JSON encodé en URL>`
 - **ID élève** : E123456
 
-# Documentation API EcoleDirecte
-
-## Caractéristiques communes
-
-Toutes les requêtes authentifiées partagent les mêmes caractéristiques :
-
-- **Méthode :** `POST`
-- **Header :** `Content-Type: application/x-www-form-urlencoded`
-- **Authentification :** `X-Token: <token>`
-- **Corps :** `data=<JSON encodé en URL>`
-- **ID élève :** `<id>`
-
-
 ## Notes
-
+requete:
 ```http
 POST /v3/eleves/<id>/notes.awp?verbe=get&v=6.17.0
 Host: api.ecoledirecte.com
@@ -43,20 +30,20 @@ X-Token: <token>
 
 data={"anneeScolaire":""}
 ```
-
+reponse:
 ```json
 {
   "code": 200,
   "data": {
     "notes": [
       {
-        "valeur": "14.5",
-        "noteSur": "20",
-        "libelleMatiere": "MATHEMATIQUES",
-        "codePeriode": "A001",
-        "coef": "2",
+        "valeur": "0",
+        "noteSur": "100",
+        "libelleMatiere": "MATHEMATIQUES",  //nom d'affichage de la matière
+        "codePeriode": "A001",  //trimestre A001 = trimestre 1, A002 = trimestre 2, A003 = trimestre 3
+        "coef": "67",
         "date": "2026-01-15",
-        "commentaire": "Bon travail"
+        "commentaire": "Confonds pi avec le périmètre d'un rectangle"
       }
     ]
   }
@@ -65,7 +52,7 @@ data={"anneeScolaire":""}
 
 
 ## Cahier de texte (Devoirs)
-
+Obtenir TOUS les devoirs
 ```http
 POST /v3/Eleves/<id>/cahierdetexte.awp?verbe=get&v=4.98.0
 Host: api.ecoledirecte.com
@@ -74,38 +61,76 @@ X-Token: <token>
 
 data={}
 ```
-
-```json
-{
+reponse
+```json{
   "code": 200,
   "data": {
     "2026-04-15": [
       {
-        "idDevoir": 98765,
+        "idDevoir": 1,
         "matiere": "MATHEMATIQUES",
-        "contenu": "RXhlcmNpY2VzIDEgYWwgNSBwYWdlIDQy",
+        "effectue": false,  //fait ou pas fait
+        "interrogation": false
+      }
+    ],
+    "2026-04-16": [
+      {
+        "idDevoir": 2,
+        "matiere": "HISTOIRE-GEOGRAPHIE",
+        "effectue": true,
+        "interrogation": true   /eva ou pas
+      },
+      {
+        "idDevoir": 3,
+        "matiere": "PHYSIQUE-CHIMIE",
         "effectue": false,
-        "interrogation": false,
-        "donneLe": "2026-04-14"
+        "interrogation": false
       }
     ]
   }
 }
 ```
 
+obtenir les devoirs d'une periode spécifiée 
 
-```markdown
+```http
+POST /v3/Eleves/<id>/cahierdetexte/<date>.awp?verbe=get&v=4.98.0
+```
+date est variable, par exemple 2026-04-15
+<br>reponse
+```http
+{
+  "code": 200,
+  "data": {
+    "matieres": [
+      {
+        "matiere": "MATHEMATIQUES",
+        "aFaire": {
+          "idDevoir": 1,
+          "contenu": "RmFpcmUgbGVzIGV4ZXJjaWNlcyBkZSBsYSBwYWdlIDI1IGEgbGEgcGFnZSAyNDgu", //travail a faire encodé en base64
+          "effectue": false,
+          "documents": [
+            {
+              "id": 111, //id de la piece jointe
+              "libelle": "exercices.pdf" //nom du fichier en piece jointe
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
 # Marquer un devoir comme fait / non fait
-
 ## Marquer comme fait
-
+pour faire cela, on a besoin de l'identifiant du devoir et remplir avec celui ci fait ou non fait
 ```http
 POST /v3/Eleves/<id>/cahierdetexte.awp?verbe=put&v=4.98.0
 Host: api.ecoledirecte.com
 Content-Type: application/x-www-form-urlencoded
 X-Token: <token>
 
-data={"idDevoirsEffectues":[98765],"idDevoirsNonEffectues":[]}
+data={"idDevoirsEffectues":[ID],"idDevoirsNonEffectues":[]}
 ```
 
 ```json
@@ -123,7 +148,7 @@ Host: api.ecoledirecte.com
 Content-Type: application/x-www-form-urlencoded
 X-Token: <token>
 
-data={"idDevoirsEffectues":[],"idDevoirsNonEffectues":[98765]}
+data={"idDevoirsEffectues":[],"idDevoirsNonEffectues":[ID]}
 ```
 
 ```json
@@ -132,43 +157,6 @@ data={"idDevoirsEffectues":[],"idDevoirsNonEffectues":[98765]}
   "message": "OK"
 }
 ```
-
-## Détail d'une journée
-
-```http
-POST /v3/Eleves/<id>/cahierdetexte/2026-04-15.awp?verbe=get&v=4.98.0
-Host: api.ecoledirecte.com
-Content-Type: application/x-www-form-urlencoded
-X-Token: <token>
-
-data={}
-```
-
-```json
-{
-  "code": 200,
-  "data": {
-    "matieres": [
-      {
-        "matiere": "MATHEMATIQUES",
-        "aFaire": {
-          "idDevoir": 98765,
-          "contenu": "RXhlcmNpY2VzIDEgYWwgNSBwYWdlIDQy",
-          "effectue": false,
-          "documents": [
-            {
-              "id": 111,
-              "libelle": "exercices.pdf"
-            }
-          ]
-        }
-      }
-    ]
-  }
-}
-```
-
-
 
 ## Messagerie (liste)
 
@@ -188,18 +176,18 @@ data={}
     "messages": {
       "received": [
         {
-          "id": 112233,
+          "id": 112233, //id du message
           "subject": "Sortie scolaire",
-          "date": "2026-04-10 14:30:00",
-          "read": false,
+          "date": "2026-04-10 14:30:00", //date et heure
+          "read": false, //lu ou non lu, les enseignants peuvent voir cela également.
           "from": {
-            "nom": "DUPONT",
-            "prenom": "Marie"
+            "nom": "SAHUR",
+            "prenom": "Tung tung"
           },
           "files": [
             {
-              "id": 222,
-              "libelle": "autorisation.pdf"
+              "id": 222, //id de la puece jointe
+              "libelle": "autorisation.pdf" //pieces jointes
             }
           ]
         }
@@ -212,25 +200,25 @@ data={}
 ## Messagerie (détail)
 
 ```http
-POST /v3/eleves/<id>/messages/112233.awp?verbe=get&mode=destinataire&v=4.98.0
+POST /v3/eleves/<id>/messages/<ID>.awp?verbe=get&mode=destinataire&v=4.98.0
 Host: api.ecoledirecte.com
 Content-Type: application/x-www-form-urlencoded
 X-Token: <token>
 
 data={}
 ```
-
+id est l'identifiant du message (112233 comme exemple)
 ```json
 {
   "code": 200,
   "data": {
     "id": 112233,
     "subject": "Sortie scolaire",
-    "content": "Q29uZmlybWF0aW9uIGRlIGxhIHNvcnRpZQ==",
+    "content": "VmVuZXogc3Zw", //contenu du message en base 64
     "date": "2026-04-10 14:30:00",
     "from": {
-      "nom": "DUPONT",
-      "prenom": "Marie"
+      "nom": "SAHUR",
+      "prenom": "Tung tung"
     },
     "files": [
       {
@@ -260,12 +248,12 @@ data={}
   "data": {
     "correspondances": [
       {
-        "type": "Observation",
-        "contenu": "RWxjbGlhbnQgc3VyIGxlIHRyYXZhaWw=",
-        "dateCreation": "2026-04-01 10:15:00",
+        "type": "Observation",  //listerai les types plus tard
+        "contenu": "Sm91ZSBhIGZvcnRuaXRlIGVuIGNvdXJz", //correspondance en base 64
+        "dateCreation": "2026-04-01 10:15:00", //date et heure
         "auteur": {
-          "nom": "MARTIN",
-          "prenom": "Jean"
+          "nom": "west",
+          "prenom": "Mason"
         },
         "isSignatureDemandee": true,
         "urlFichier": "https://api.ecoledirecte.com/fichiers/333"
