@@ -526,8 +526,53 @@ réponse:
 }
 ```
 ## marquer comme fait ou non fait
+pour faire cela, on a besoin de l'identifiant du devoir et remplir avec celui ci fait ou non fait
+> [!note]
+> laisser l'autre champ vide
 ## marquer fait
+Requete:
+```json
+{
+  "method": "POST",
+  "scheme": "https",
+  "authority": "api.ecoledirecte.com",
+  "path": "/v3/Eleves/<id>/cahierdetexte.awp?verbe=put&v=4.98.0",
+  "Content-Type": "application/x-www-form-urlencoded",
+  "X-Token": "<token>",
+  "body": "data={\"idDevoirsEffectues\":[ID],\"idDevoirsNonEffectues\":[]}"
+}
+```
+Reponse:
+```json
+{
+  "code": 200,
+  "message": "OK"
+}
+```
+Le devoir est maintenant non fait (sur l'app, site et autres)
+
 ## marquer non fait
+Requete:
+```json
+{
+  "method": "POST",
+  "scheme": "https",
+  "authority": "api.ecoledirecte.com",
+  "path": "/v3/Eleves/<id>/cahierdetexte.awp?verbe=put&v=4.98.0",
+  "Content-Type": "application/x-www-form-urlencoded",
+  "X-Token": "<token>",
+  "body": "data={\"idDevoirsEffectues\":[],\"idDevoirsNonEffectues\":[ID]}"
+}
+```
+Reponse:
+```json
+{
+  "code": 200,
+  "message": "OK"
+}
+```
+Le devoir est maintenant non fait
+
 ## pièce jointe
 Récuperer la pièce jointe
 > [!note]
