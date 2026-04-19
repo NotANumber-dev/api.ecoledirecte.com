@@ -8,7 +8,7 @@ requetes possibles à l'api d'ecoledirecte
 > [!note]
 > version anglais a venir et
 > plus d'infos a venir.
-
+> 
 > Cette "documentation" n'est pas complète. utilise d'autre sources pour d'autes appels api.
 
 ## Sommaire
