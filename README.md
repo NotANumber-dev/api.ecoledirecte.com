@@ -15,7 +15,7 @@ requetes possibles à l'api d'ecoledirecte
 - [Format de l'api](#format-de-lapi)
 - [Notes](#notes)
 - [Cahier de texte](#cahier-de-texte)
-     - [tous les devoirs](tous-les-devoirs)
+     - [tous les devoirs](#tous-les-devoirs)
      - [jour spécifié](#cahier-de-textespecifié)
 
 ## format de l'api
