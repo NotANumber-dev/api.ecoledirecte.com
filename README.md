@@ -17,6 +17,9 @@ requetes possibles à l'api d'ecoledirecte
 - [Cahier de texte](#cahier-de-texte)
      - [tous les devoirs](#tous-les-devoirs)
      - [jour spécifié](#cahier-de-textespecifié)
+     - [marquer comme fait/non fait](#marquer-fait-ou-non-fait)
+        - [marquer fait](#marquer-fait)
+        - [marquer non fait](#marquer-non-fait)
 
 ## format de l'api
 les requetes ecoledirecte sont envoyés a ``https://api.ecoledirecte.com/`` en ``POST`` (pas GET
@@ -522,6 +525,9 @@ réponse:
   }
 }
 ```
+## marquer comme fait ou non fait
+## marquer fait
+## marquer non fait
 ## pièce jointe
 Récuperer la pièce jointe
 > [!note]
