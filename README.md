@@ -14,7 +14,9 @@ requetes possibles à l'api d'ecoledirecte
 
 - [Format de l'api](#format-de-lapi)
 - [Notes](#notes)
-- [Cahier de texteDevoirs](#cahier-de-texte)
+- [Cahier de texte](#cahier-de-texte)
+     - [tous les devoirs](tous-les-devoirs)
+     - [jour spécifié](#cahier-de-textespecifié)
 
 ## format de l'api
 les requetes ecoledirecte sont envoyés a ``https://api.ecoledirecte.com/`` en ``POST`` (pas GET
@@ -350,7 +352,7 @@ le cahier de texte sur le site charge plusieurs pages:
    - manuelsNumeriques.awp
 
 Je vais rester uniquement sur cahierdetexte.awp dans cette section
-
+## tous les devoirs
 
 requete:
 ```json
