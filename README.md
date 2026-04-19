@@ -10,6 +10,11 @@ requetes possibles à l'api d'ecoledirecte
 > plus d'infos a venir
 > Cette "documentation" n'est pas complète. utilise d'autre sources pour d'autes appels api.
 
+## Sommaire
+
+- [Format de l'api](#format-de-lapi)
+- [Notes](#notes)
+- [Cahier de texteDevoirs](#cahier-de-texte)
 
 ## format de l'api
 les requetes ecoledirecte sont envoyés a ``https://api.ecoledirecte.com/`` en ``POST`` (pas GET
@@ -23,15 +28,20 @@ Toutes les requêtes partagent les mêmes caractéristiques :
 - **Corps** : `data=<JSON encodé en URL>`
 - **ID élève** : E123456
 
-## Notes
+## notes
 requete:
 ```http
-POST /v3/eleves/<id>/notes.awp?verbe=get&v=6.17.0
-Host: api.ecoledirecte.com
-Content-Type: application/x-www-form-urlencoded
-X-Token: <token>
-
-data={"anneeScolaire":""}
+{
+  "method": "POST",
+  "scheme": "https",
+  "authority": "api.ecoledirecte.com",
+  "path": "/v3/eleves/ID/notes.awp?verbe=get&v=4.98.0",
+  "Content-Type": "application/x-www-form-urlencoded",
+  "X-Token": "abcde",
+  "body": {
+    "data": {"anneeScolaire": ""} //vide ou année scolaire actuelle
+  }
+}
 ```
 reponse:
 ```json
@@ -40,7 +50,7 @@ reponse:
     "token": "abcdefghijklmnopqrstuvwxyz1234567890",  //token (exemple)
     "host": "HTTP139",
     "data": {
-        "foStat": "1001",  //jsp sa sert a quoi
+        "foStat": "1001",
         "periodes": [
             {
                 "idPeriode": "A001",  //Identifiant peridode, utilisé pour savoir quelle note est ou
@@ -53,7 +63,7 @@ reponse:
                 "cloture": true,  //si le trimestre est en cours
                 "dateConseil": "2025-12-04",  //date conseil de classe
                 "heureConseil": "17:45",  //heure conseil de classe
-                "salleConseil": "SALLE CONSEIL 1",  //jsp
+                "salleConseil": "SALLE CONSEIL 1",  //nom de la salle de conseil de classe
                 "moyNbreJoursApresConseil": -1,
                 "ensembleMatieres": {
                     "dateCalcul": "",
@@ -333,6 +343,192 @@ reponse:
     }
 }
 ```
+## cahier de texte
+le cahier de texte sur le site charge plusieurs pages: 
+   - viedelaclasse.awp
+   - cahierdetexte.awp
+   - manuelsNumeriques.awp
+
+Je vais rester uniquement sur cahierdetexte.awp dans cette section
+
+
+requete:
+```json
+{
+  "method": "POST",
+  "scheme": "https",
+  "authority": "api.ecoledirecte.com",
+  "path": "/v3/Eleves/ID/cahierdetexte.awp?verbe=get&v=4.98.0",
+  "2FA-Token": "7654321",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Content-Length": 7,
+  "Content-Type": "application/x-www-form-urlencoded",
+  "Origin": "https://www.ecoledirecte.com",
+  "Priority": "u=3, i",
+  "Referer": "https://www.ecoledirecte.com/",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-site",
+  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15",
+  "X-Token": "1234567"
+}
+```
+reponse
+```json
+{
+  "code": 200,
+  "token": "7654321",
+  "host": "HTTP232",
+  "data": {
+    "2026-01-3": [ //pour quand, ici 2 devoirs pour le meme jour
+      {
+        "matiere": "FORTNITE", //nom d'affichage matiere
+        "codeMatiere": "FN", //code matiere
+        "aFaire": true,
+        "idDevoir": 1,
+        "documentsAFaire": false,
+        "donneLe": "2026-01-01", //date ou le devoir a ete donné
+        "effectue": false, //fait ou pas
+        "interrogation": true, //eva ou pas
+        "rendreEnLigne": false, //fonctionalitée "rendre en ligne"
+        "tags": []
+      },
+      {
+        "matiere": "FRANCAIS",
+        "codeMatiere": "FRANC",
+        "aFaire": true,
+        "idDevoir": 2,
+        "documentsAFaire": true,
+        "donneLe": "2026-04-03",
+        "effectue": false,
+        "interrogation": false,
+        "rendreEnLigne": false,
+        "tags": []
+      }
+    ],
+    "2026-02-04": [
+      {
+        "matiere": "MATHEMATIQUES",
+        "codeMatiere": "MATHS",
+        "aFaire": true,
+        "idDevoir": 3,
+        "documentsAFaire": true,
+        "donneLe": "2026-02-06",
+        "effectue": true,
+        "interrogation": false,
+        "rendreEnLigne": true,
+        "tags": []
+      }
+    ],
+  }
+}
+```
+
+
+## cahier de texte(specifié)
+obtenir les devoirs d'une periode spécifiée.
+
+ID=1234 pour E1234
+
+```json
+{
+  "method": "POST",
+  "scheme": "https",
+  "authority": "api.ecoledirecte.com",
+  "path": "/v3/Eleves/ID/cahierdetexte/2026-05-04.awp?verbe=get&v=4.98.0",
+  "2FA-Token": "7654321",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Content-Type": "application/x-www-form-urlencoded",
+  "Origin": "https://www.ecoledirecte.com",
+  "Priority": "u=3, i",
+  "Referer": "https://www.ecoledirecte.com/",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-site",
+  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15",
+  "X-Token": "1234567",
+  "body": "data={}"
+}
+```
+réponse:
+```json
+{
+  "code": 200,
+  "token": "7654321",
+  "host": "HTTP321",
+  "data": {
+    "date": "2026-02-04",
+    "matieres": [
+      {
+        "entityCode": "MATHS",
+        "entityLibelle": "MATHS",
+        "entityType": "M",
+        "matiere": "MATHEMATIQUES",
+        "codeMatiere": "DNLHG",
+        "nomProf": "Mme. Cercle",
+        "id": 3,
+        "interrogation": false,
+        "blogActif": false,
+        "nbJourMaxRenduDevoir": 0,
+        "aFaire": {
+          "idDevoir": 3,
+          "contenu": "dmVuZXogZW4gY291cnMgc3Zw", //travail a faire en base64
+          "rendreEnLigne": false,
+          "donneLe": "2026-01-06",
+          "effectue": false,
+          "ressource": "",
+          "documentsRendusDeposes": false,
+          "ressourceDocuments": [],
+          "documents": [
+            {
+              "id": 67,
+              "libelle": "Cube.pdf",
+              "date": "2026-01-06",
+              "taille": 6031010, //taille du doc
+              "type": "FICHIER_CDT",
+              "signatureDemandee": false,
+              "etatSignatures": [],
+              "signature": {}
+            },
+            {
+              "id": 69,
+              "libelle": "Pavé-pas-droit.pdf",
+              "date": "2026-01-06",
+              "taille": 112541,
+              "type": "FICHIER_CDT",
+              "signatureDemandee": false,
+              "etatSignatures": [],
+              "signature": {}
+            }
+          ],
+          "elementsProg": [],
+          "liensManuel": [],
+          "documentsRendus": [],
+          "tags": [],
+          "cdtPersonnalises": [],
+          "contenuDeSeance": {
+            "contenu": "",
+            "documents": []
+          }
+        }
+      }
+    ]
+  }
+}
+```
+## pièce jointe
+Récuperer la pièce jointe
+> [!note]
+> pièce jointe de mail, devoir ou vie scolaire
+> recupère avec id
+
+
+
+
 
 ## Codes d'erreur
 
