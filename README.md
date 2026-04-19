@@ -34,8 +34,12 @@ Toutes les requêtes partagent les mêmes caractéristiques :
 - **ID élève** : E123456
 
 ## notes
+utilise
+```url
+api.ecoledirecte.com/v3/eleves/ID/notes.awp?verbe=get&v=4.98.0
+```
 requete:
-```http
+```json
 {
   "method": "POST",
   "scheme": "https",
@@ -356,6 +360,10 @@ le cahier de texte sur le site charge plusieurs pages:
 
 Je vais rester uniquement sur cahierdetexte.awp dans cette section
 ## tous les devoirs
+utilise
+```url
+api.ecoledirecte.com/v3/Eleves/ID/cahierdetexte.awp?verbe=get&v=4.98.0
+```
 
 requete:
 ```json
@@ -434,6 +442,10 @@ reponse
 
 ## cahier de texte(specifié)
 obtenir les devoirs d'une periode spécifiée.
+utilise
+```url
+api.ecoledirecte.com/v3/Eleves/ID/cahierdetexte/YYYY-MM-DD.awp?verbe=get&v=4.98.0
+```
 
 ID=1234 pour E1234
 
@@ -526,6 +538,10 @@ réponse:
 }
 ```
 ## marquer comme fait ou non fait
+utilise
+```url
+api.ecoledirecte.com/v3/Eleves/<id>/cahierdetexte.awp?verbe=put&v=4.98.0
+```
 pour faire cela, on a besoin de l'identifiant du devoir et remplir avec celui ci fait ou non fait
 > [!note]
 > laisser l'autre champ vide
