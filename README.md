@@ -22,7 +22,7 @@ requetes possibles à l'api d'ecoledirecte
         - [marquer fait](#marquer-fait)
         - [marquer non fait](#marquer-non-fait)
 - [pièces jointes](#pièce-jointe)
-- [codes d'erreur] (#Codes-derreur)
+- [codes d'erreur](#Codes-derreur)
 ## format de l'api
 les requetes ecoledirecte sont envoyés a ``https://api.ecoledirecte.com/`` en ``POST`` (pas GET
 )
