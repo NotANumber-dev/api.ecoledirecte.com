@@ -248,9 +248,9 @@ reponse:
                 "uncCorrige": "",
                 "date": "2025-09-12",
                 "dateSaisie": "2025-09-12",
-                "coef": "0.25",
+                "coef": "2",
                 "noteSur": "20",
-                "valeur": "-42,5",
+                "valeur": "2,5",
                 "valeurisee": false,
                 "nonSignificatif": false,
                 "moyenneClasse": "", //activable par l'etablissement
