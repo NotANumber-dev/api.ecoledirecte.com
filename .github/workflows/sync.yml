@@ -1,0 +1,126 @@
+name: Sync README to web repo
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "README.md"
+  workflow_dispatch:
+
+jobs:
+  convert-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Convert README to HTML
+        run: |
+          pandoc README.md -o index.html \
+            --self-contained \
+            --metadata pagetitle="API ÉcoleDirecte" \
+            -H <(cat <<'EOF'
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              background-color: #000000;
+              color: #e0e0e0;
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              line-height: 1.6;
+              padding: 2rem;
+              max-width: 1100px;
+              margin: 0 auto;
+            }
+            a {
+              color: #66b0ff;
+              text-decoration: none;
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+            pre, code {
+              background-color: #1a1a1a;
+              border-radius: 6px;
+              font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+            }
+            pre {
+              padding: 1rem;
+              overflow-x: auto;
+              margin: 1rem 0;
+            }
+            code {
+              padding: 0.2rem 0.4rem;
+              font-size: 0.9em;
+            }
+            pre code {
+              padding: 0;
+              background: transparent;
+            }
+            blockquote {
+              border-left: 4px solid #444;
+              margin: 1rem 0;
+              padding-left: 1rem;
+              color: #aaaaaa;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              margin: 1rem 0;
+            }
+            th, td {
+              border: 1px solid #333333;
+              padding: 0.5rem 1rem;
+              text-align: left;
+            }
+            th {
+              background-color: #1a1a1a;
+              font-weight: 600;
+            }
+            h1, h2, h3, h4 {
+              color: #ffffff;
+              margin-top: 1.5rem;
+              margin-bottom: 0.75rem;
+            }
+            h1 {
+              border-bottom: 2px solid #333;
+              padding-bottom: 0.5rem;
+            }
+            hr {
+              border: none;
+              height: 1px;
+              background: #333;
+              margin: 2rem 0;
+            }
+            .back-to-top {
+              font-size: 0.85rem;
+              margin-top: 1rem;
+              display: inline-block;
+            }
+          </style>
+          EOF
+          )
+
+      - name: Checkout destination repo
+        uses: actions/checkout@v4
+        with:
+          repository: NotANumber-dev/web
+          token: ${{ secrets.PAT_TOKEN }}
+          path: web-repo
+
+      - name: Copy HTML to doc/ed/index.html
+        run: |
+          mkdir -p web-repo/doc/ed
+          cp index.html web-repo/doc/ed/index.html
+          cd web-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add doc/ed/index.html
+          git diff --staged --quiet || git commit -m "docs: update API documentation from api.ecoledirecte.com [skip ci]"
+          git push
