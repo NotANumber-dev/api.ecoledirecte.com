@@ -3,7 +3,7 @@ requetes possibles à l'api d'ecoledirecte
 
 > [!warning]
 > documentation non officielle
-> Documentation uniquement des appels api de ecoledirecte -
+> Documentation uniquement des appels api de ecoledirecte - 
 
 > [!note]
 > version anglais a venir et
